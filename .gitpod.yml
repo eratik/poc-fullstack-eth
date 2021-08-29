@@ -1,23 +1,13 @@
-# Learn more about this file at https://www.gitpod.io/docs/references/gitpod-yml
 tasks:
-  - init: yarn
-    command: yarn start
+  - name: Install, start node, and deploy
+    init: yarn
+    command: npx hardhat node
+  - name: Deploy smart contract and start server
+    command: |
+      gp await-port 8545
+      npx hardhat run scripts/deploy.js --network localhost
+      npm run start
+    openMode: tab-after
 ports:
-  - port: 3000
-    onOpen: open-preview
-github:
-  prebuilds:
-    # enable for the default branch (defaults to true)
-    master: true
-    # enable for all branches in this repo (defaults to false)
-    branches: true
-    # enable for pull requests coming from this repo (defaults to true)
-    pullRequests: true
-    # enable for pull requests coming from forks (defaults to false)
-    pullRequestsFromForks: true
-    # add a check to pull requests (defaults to true)
-    addCheck: true
-    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
-    addComment: false
-    # add a "Review in Gitpod" button to the pull request's description (defaults to false)
-    addBadge: true
+  - port: 3000-8545
+    visibility: public
